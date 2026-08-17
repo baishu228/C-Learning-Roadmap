@@ -1,1 +1,140 @@
+基础示例：main.c
+#include <stdio.h>
+int main() {
+    int age = 18;          
+    printf("我今年%d岁", age); 
+    return 0;
+}
+输出：
+text
+我今年18岁
 
+demo1.c（输出我今年36岁)
+方案1：直接修改赋值
+#include <stdio.h>
+int main() {
+    int age = 18*2;          
+    printf("我今年%d岁", age); 
+    return 0;
+}
+
+方案2：在输出时计算
+#include <stdio.h>
+int main() {
+    int age = 18;          
+    printf("我今年%d岁", age*2); 
+    return 0;
+}
+
+demo2.c(输出小数）
+情况1：将“ int age = 18 ”改为“ int age = 0.8 ”，将“ %d ”改成“ %f ”
+#include <stdio.h>
+int main() {
+    int age = 0.8;          
+    printf("我今年%f岁", age); 
+    return 0;
+}
+输出：
+text 
+我今年0.000000岁
+
+❌ 因为 int 会截断小数部分，只保留整数 0，且 %f 读取时按浮点数解释，但实际传入的是整数，导致未定义行为（此处输出 0.000000）
+
+情况2：将“ int age ”改为“ float age ”，将“ %d ”改成“ %f ”
+#include <stdio.h>
+int main() {
+    float age = 0.8;          
+    printf("我今年%f岁", age); 
+    return 0;
+}
+输出：
+text
+我今年0.800000岁
+
+demo3.c（控制小数点位数）
+情况1：保留两位小数，将“ %f ”改为“ %.2f ”
+#include <stdio.h>
+int main() {
+    float age = 0.8;          
+    printf("我今年%.2f岁", age); 
+    return 0;
+}
+输出：
+text
+我今年0.80岁
+
+情况2：宽度为4，保留两位小数，将“ %.2f ”改为“ %4.2f ”
+#include <stdio.h>
+int main() {
+    float age = 0.8;          
+    printf("我今年%4.2f岁", age); 
+    return 0;
+}
+输出：
+text
+我今年0.80岁
+
+因为宽度4是输出结果至少占据四个字符，所以无变化
+
+情况3：将“ %4.2f ”改为“ %8.2f ” 
+#include <stdio.h>
+int main() {
+    float age = 0.8;          
+    printf("我今年%8.2f岁", age); 
+    return 0;
+}
+输出：
+text
+我今年    0.80岁
+
+情况4：左对齐，将“ %8.2f ”改为“ %-8.2f ”
+#include <stdio.h>
+int main() {
+    float age = 0.8;          
+    printf("我今年%-8.2f岁", age); 
+    return 0;
+}
+输出：
+text
+我今年0.80    岁
+
+情况5：将“ %-8.2f ”改为“ %3.0f ”
+#include <stdio.h>
+int main() {
+    float age = 0.8;          
+    printf("我今年%3.0f岁", age); 
+    return 0;
+}
+输出：
+text
+我今年  1岁
+
+四舍五入后为1
+
+情况6：将“ %3.0f ”改为“ %.16f ”
+#include <stdio.h>
+int main() {
+    float age = 0.8;          
+    printf("我今年%.16f岁", age); 
+    return 0;
+}
+输出：
+text
+我今年0.8000000119209290岁
+
+0.8 在二进制中无法精确表示，float 存储的是近似值
+
+notes.md
+1.int是截断式整数盒子即“向零截断”舍弃小数部分（如0.8为0），负数规则不同在这里不讨论。
+2.%d是十进制整数占位符，%f是浮点数占位符，决定了如何输出类型不匹配会导致结果错误。
+3.小数在计算机里以“二进制分数”存，分母必须是2的幂次（1/2，1/4，1/8……），因此0.8在此规则下是无限循环小数，于是在情况6的小数点后面会出现119209290，无法精确表示。
+4.格式控制符详解：
+%f：默认显示六位小数
+
+%.nf：保留 n 位小数（四舍五入）。
+
+%m.nf：总宽度为 m（含小数点），右对齐，不足补空格。
+
+%-m.nf：左对齐，不足补空格。
+
+%m.0f：保留 0 位小数，即输出整数（四舍五入），总宽度 m
